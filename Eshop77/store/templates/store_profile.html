@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block store_profile %}
+
+ {% load static %}
+
+
+<div id="cust_profdetails " class="detailsprofclass" style="margin-left:150px;margin-top:50px;margin-right:50px;">
+
+   <h3 class="mx-3">My Profile</h3>
+   <hr>
+   <br>
+   <br>
+    <div class="container">
+        <div class="row g-2">
+          
+          <div class="col-6 my-2">
+            <div class="p-3 border bg-light">Name</div>
+          </div>
+          <div class="col-6 my-2">
+            <div class="p-3 border bg-light">{{customer.first_name}}<span> </span>{{customer.last_name}}</div>
+          </div>
+          <div class="col-6 my-2">
+            <div class="p-3 border bg-light">Email</div>
+          </div>
+          <div class="col-6 my-2">
+            <div class="p-3 border bg-light">{{customer.email}}</div>
+          </div>
+        </div>
+        <div class="row g-2">
+            
+            
+            <div class="col-6 my-2">
+              <div class="p-3 border bg-light">Mobile</div>
+            </div>
+            <div class="col-6 my-2">
+              <div class="p-3 border bg-light">{{customer.phone}}</div>
+            </div>
+          </div>
+          <div class="row g-2">
+           
+           
+            <div class="col-6 my-2">
+              <div class="p-3 border bg-light">Username</div>
+            </div>
+            <div class="col-6 my-2">
+              <div class="p-3 border bg-light">{{customer.username}}</div>
+            </div>
+          </div>
+          <i>To make any changes please contact CP Yadav - +918382919600</i>
+      </div>
+
+</div>
+
+{% endblock %}

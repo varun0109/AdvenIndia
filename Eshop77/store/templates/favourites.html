@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+<div class="container">
+   <div class="  rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Wish List</p>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                     
+                    <th>Image</th>
+                    <th>Product</th>
+                     
+                    <th>Price</th>
+                    <th><a>Remove from list</a></th>  
+                    <th><a>Add to Cart</a></th>  
+                     
+                     
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for fav in favs %}
+                <tr>
+                    
+                    <td><img style="height: 80px;" class="rounded-circle" src="{{fav.favourites.image.url}}" alt=""></td>
+                    <td>{{fav.favourites.name}}</td>
+                     
+                    <td>{{fav.favourites.price|currency}}</td>
+                    <td><a href="#">Remove</a></td>
+                    <td><a href="#">Add to cart</a></td>
+                     
+                     
+                </tr>
+
+                {% endfor %}
+               
+            </tbody>
+
+        </table>
+       
+   </div>
+</div>
+
+
+
+
+
+{% endblock %}

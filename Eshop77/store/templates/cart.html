@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+<div class="container">
+  <div class=" rounded p-4 m-4  ">
+    <p class="display-4 pl-4 ml-4">Your Cart</p>
+    <hr>
+   <!-- <div class="table-responsive"> -->
+    <input type="hidden" id="profile-name" value={{request.session.Name}} />
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sno.</th>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
+
+          <th>Total</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for product in products %}
+        
+
+        <tr id="item-{{product.id}}" class="cart-item">
+
+          <td>{{forloop.counter}}</td>
+          <td><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
+          <td>{{product.name}}
+            <br>
+          </td>
+          <!--  add to session here on + and -   -->
+          <span>
+            <td><button class="btn btn-sm btn-light neg   cart-rem  " id="remove-{{product.id}}">-</button>
+
+
+              <span id="quan-{{product.id}}" class="px-2"> {{product|cart_quantity:request.session.cart}} </span>
+
+              <button class="btn btn-sm btn-light cart-add" id="add-{{product.id}}">+</button>
+
+
+            </td>
+          </span>
+
+          <td>{{product.price|afterdiscount:product.discount|currency}} </td>
+
+          <td>{{product|price_total:request.session.cart|currency}} </td>
+          <!-- add svg image  -->
+          <td> <button id="gotrash-{{product.id}}" class="btn btn-sm btn-light rounded-circle del-item"><img
+                src="{% static 'clear_cart.png' %}" style="height: 20px;" /></button></td>
+
+
+
+
+
+        </tr>
+
+        {% endfor %}
+
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th colspan="4"></th>
+          <th class="" colspan="">Total</th>
+          <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+        </tr>
+      </tfoot>
+    </table>
+    <!-- </div> -->
+    <hr>
+    <div class="m-3 p-3">
+      <a href="#" data-toggle="modal" data-target="#exampleModal"
+        class="btn btn-outline-info border rounded  col-lg-3 float-right">Check out</a>
+    </div>
+  </div>
+</div>
+
+<!-- {{request.session.customer }}
+{{request.session.Name }}
+{{request.session.Phone }}
+{{request.session.Address}} -->
+
+<!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Check Out Form
+        </h5>
+        <hr>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="m-2 p-3">
+          <!-- <blank form for address and phone / take it from db> -->
+          <form action="/check-out" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="">Name</label>
+              <input type="text" name="Name" id="" value="{{request.session.Name}}" class="form-control" placeholder="" aria-describedby="helpId" required />
+            </div>
+            <div class="form-group">
+              <!-- <Address is default, change it ></Address> -->
+              <label for="">Address</label>
+              <input type="text" name="address" id="" value="{{request.session.Address}}" class="form-control"
+                placeholder="" aria-describedby="helpId" required />
+
+                <label for="">Address 2</label>
+              <input type="text" name="address2" id="" value="" class="form-control"
+                placeholder="landmark" aria-describedby="helpId">
+
+            </div>
+
+            <div class="form-group">
+              <label for="">Phone</label>
+              <input type="text" name="phone" id="" value="{{request.session.Phone}}" class="form-control"
+                placeholder="" aria-describedby="helpId"  >
+
+
+                <label for="addresszip">Zip</label>
+                <input type="text" name="addresszip" id=""   class="form-control" placeholder="" aria-describedby="helpId" required />
+
+
+            </div>
+
+            <input type="submit" class="btn float-right btn-outline-info col-lg-6 my-4 mx-4" value="Check out" >
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

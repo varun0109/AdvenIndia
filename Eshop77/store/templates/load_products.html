@@ -1,0 +1,357 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+     <style>
+
+
+     </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+  
+      <script>
+        $(document).ready(function () { 
+
+
+          function cal_interm_bv(id){
+
+            sell_price=$('#prdsellpc-'+id).text();
+            mrp=$('#prdmrp-'+id).val()
+
+   
+     
+
+         
+
+            var costprice=$('#prdprice-'+id).val();
+
+            
+            //var sell_price=$('#sellprice').val();
+            var dscount=$('#prddsc-'+id).val();
+            var admin_percent=$('#admprc-'+id).val();
+
+            var cost_diff=((sell_price-costprice - (sell_price*dscount/100) )*(100-admin_percent)/100)*0.2;
+
+            $('#bvg-'+id).val(cost_diff.toFixed(2));
+
+         
+            $('#prdsellpc-'+id).text( (mrp-(mrp*dscount/100)).toFixed(2));
+          }
+
+          function cal_bv(id){
+            
+            //,"#prdmrp-"+id,"#admprc-"+id,"#prddsc-"+id
+          //  prdprice="#prdprice-"+id  
+            
+            $("#prdmrp-"+id).keyup(function(){
+   
+              cal_interm_bv(id);
+  
+            });
+
+            $("#admprc-"+id).keyup(function(){
+   
+              cal_interm_bv(id);
+  
+            });
+
+            $("#prddsc-"+id).keyup(function(){
+   
+              cal_interm_bv(id);
+  
+            });
+
+            $("#prdprice-"+id ).keyup(function(){
+   
+              cal_interm_bv(id);
+  
+            });
+          }
+
+          
+
+
+          $('.saveprod-dat').css("display","none");
+
+          $('.delprod').click(function(){
+
+            delid=$(this).attr("id");
+            delelm_id=delid.split("-")[1];
+
+            $.ajax(
+              {
+                url: '/del_prod',
+                async : true,
+                type: 'post',
+                data: {
+               
+                  prdid:delelm_id,
+  
+  
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function (response) {
+                  console.log(response.msg);
+                  location.reload();
+                  alert('deleted successfully');
+                
+                }});
+
+
+
+
+
+          });
+
+        $('.editprod').click(function(){
+
+         
+          $("#formidprd").submit(function(e){
+            e.preventDefault();
+        });
+       // make all inputs editable //
+
+        prded_id=$(this).attr("id");
+        elem_id=prded_id.split("-")[1];
+
+        cal_bv(elem_id);
+
+        $('#prdnm-'+elem_id).prop("disabled",false);
+        $('#prdnm-'+elem_id).removeClass("bg-light");
+        $('#prdprice-'+elem_id).prop("disabled",false);
+        $('#prdprice-'+elem_id).removeClass("bg-info");
+        $('#prdmrp-'+elem_id).prop("disabled",false);
+        $('#prdmrp-'+elem_id).removeClass("bg-info");
+        $('#admprc-'+elem_id).prop("disabled",false);
+        $('#admprc-'+elem_id).removeClass("bg-info");
+        $('#bvg-'+elem_id).prop("disabled",false);
+        $('#bvg-'+elem_id).removeClass("bg-info");
+
+        $('#prddsc-'+elem_id).prop("disabled",false);
+        $('#prddsc-'+elem_id).removeClass("bg-info");
+
+        $('#prdbr-'+elem_id).prop("disabled",false);
+        $('#prdbr-'+elem_id).removeClass("bg-light");
+        $('#'+prded_id).text('Save');
+        $('#'+prded_id).attr('id',"svprd1-"+elem_id);
+
+        $("#svprd1-"+elem_id).click(function(){
+
+          //ajax call to submit values to update
+
+          //get values
+
+          var prdname=$('#prdnm-'+elem_id).val();
+          var prdprice=$('#prdprice-'+elem_id).val();
+          var prdmrp=$('#prdmrp-'+elem_id).val();
+          var admprc=$('#admprc-'+elem_id).val();
+          var bvg=$('#bvg-'+elem_id).val();
+          var prddsc=$('#prddsc-'+elem_id).val();
+          var prdbr=$('#prdbr-'+elem_id).val();
+          var sell_price=$('#prdsellpc-'+elem_id).text();
+
+
+          $.ajax(
+            {
+              url: '/edit_prod',
+              async : true,
+              type: 'post',
+              data: {
+                prdname: prdname,
+                prdprice: prdprice,
+                prdmrp:prdmrp,
+                admprc:admprc,
+                bvg:bvg,
+                prddsc:prddsc,
+                prdbr:prdbr,
+                prdid:elem_id,
+                sell_price:sell_price,
+
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+              },
+              success: function (response) {
+                console.log(response['prdname']);
+
+                $('#prdnm-'+elem_id).prop("disabled",true);
+                $('#prdnm-'+elem_id).addClass("bg-light");
+                $('#prdprice-'+elem_id).prop("disabled",true);
+                $('#prdprice-'+elem_id).addClass("bg-info");
+                $('#prdmrp-'+elem_id).prop("disabled",true);
+                $('#prdmrp-'+elem_id).addClass("bg-info");
+                $('#admprc-'+elem_id).prop("disabled",true);
+                $('#admprc-'+elem_id).addClass("bg-info");
+                $('#bvg-'+elem_id).prop("disabled",true);
+                $('#bvg-'+elem_id).addClass("bg-info");
+        
+                $('#prddsc-'+elem_id).prop("disabled",true);
+                $('#prddsc-'+elem_id).addClass("bg-info");
+        
+                $('#prdbr-'+elem_id).prop("disabled",true);
+                $('#prdbr-'+elem_id).addClass("bg-light");
+                $('#'+prded_id).text('Edit');
+                $('#'+prded_id).attr('id',"edtprd-"+elem_id);
+
+                location.reload();
+              
+                
+              }
+            }
+          );
+           
+
+
+
+
+        })
+        
+        
+
+        });
+
+  
+           
+          
+        });
+      </script>
+</head>
+<body>
+    
+
+
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+    <div class="container-fluid">
+   
+  <a class="navbar-brand me-auto  ms-auto py-0"    href="/homepage" style="width:35%;height:8%;margin-right:0px;padding-right:0px;"> <img class="py-0" src="{% static 'brand3.svg' %}" style="width:28%;height:8%;margin-right:0px;padding-right:0px;">
+  </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="#">Admin</a>
+          <a class="nav-link active" style="color:#00FF00"  href="/load_product"><u>Load Products</u></a>
+          <a class="nav-link active" href="#"><u>Sold Products</u></a>
+          <a class="nav-link active" style="color:#00FF00" href="/admin_order_confrm"><u>Confirm Orders</u></a>
+          <a class="nav-link active" style="color:#00FF00" href="/usrpln_conf"><u>Update User Plan</u></a>
+         
+        </div>
+      </div>
+    </div>
+  </nav>
+
+      {% load cart %}
+{% load custom_filter %}
+
+
+<div class="container mx-5">
+    <input type="hidden" id="profile-name" value={{request.session.Name}} />
+ 
+         
+        
+
+     
+          <div class="order-txt" style="text-align:center"><p class="display-4 pl-4 ml-4">Load Products</p></div>
+          
+         <div class="" style="text-align:center"> 
+         <a href="/addnew_product">
+            <button class="rounded btn btn-large bg-success text-light">Add New Product +</button>
+         </a></div> 
+
+
+
+        <hr>
+        
+        <table class="table"  style="font-family:Verdana, Geneva, Tahoma, sans-serif">
+          
+            
+            <thead>
+
+            
+              <tr>
+                    <!-- <th>Sno.</th> -->
+                     
+                    <th>Id</th>
+                    <!-- <th>Prod Id</th> -->
+                    <th>Product Name</th>
+                    <th>CostPrice</th>
+                    <th>MRP</th>
+                    <th>Admin%</th>
+                    <th>Discount</th>
+                    <th>Sell Price</th>
+                    <th>Category</th>
+                    <th>BV</th>
+                    <th>Image</th>
+                    <th>Brand</th>
+                    
+                    <th>Manufac Date</th>
+                    <th>Expiry Date</th>
+                    <th>Edit</th>
+                    <th>Delete Product</th>
+                   
+                    
+                     
+                    
+                </tr>
+            </thead>
+            <tbody>
+             
+                
+                {% for prdc in prod_items %}
+               
+                <tr>
+                    <form  id="formidprd" method="POST" action="#">
+                        {% csrf_token %}
+                     
+                    <!-- <td>{{forloop.counter}}</td> -->
+                    <td >{{forloop.counter}}</td>
+                    
+                    <td  class="px-0 mx-0"><input  class="px-0 mx-0 bg-light " id="prdnm-{{prdc.id}}" value="{{prdc.name}}" disabled="disabled"></td>
+                    <td  class="px-0 mx-0"><input  class="px-0 mx-0 bg-info w-50 " id="prdprice-{{prdc.id}}" value="{{prdc.cost_price}}" disabled=""> </td>
+                    <td class="px-0 mx-0 ">  <input  class="px-0 mx-0 bg-info  w-75 " id="prdmrp-{{prdc.id}}" value="{{prdc.MRP}}" disabled=""> </td>
+                    <td class="px-0 mx-0 "> <input  class="px-0 mx-0 bg-info  w-75 " id="admprc-{{prdc.id}}" value="{{prdc.admin_percentage}}" disabled=""> </td>
+                    <td><input  class="px-0 mx-0 bg-info  w-75" id="prddsc-{{prdc.id}}" value="{{prdc.discount}}" disabled=""></td>
+                    <td id="prdsellpc-{{prdc.id}}">{{prdc.sell_price}}</td>
+                    <td>{{prdc.category}}</td>
+                    <td class="px-0 mx-0 "><input  class="px-0 mx-0 bg-info w-100 " id="bvg-{{prdc.id}}" value="{{prdc.BV_gained}}" disabled=""></td>
+                    <td ><img  style="height: 50px;" class="rounded-circle" src={{prdc.image.url}}  /></td>
+                    <td class="px-0 mx-0 "><input  class="px-0 mx-0 bg-light w-100 " id="prdbr-{{prdc.id}}" value="{{prdc.Product_brand}}" disabled=""></td>
+                    
+                    <td>{{prdc.manufactur_date}}</td>
+                    <td>{{prdc.expiry_date}}</td>
+                    <td class="editprod-dat"><button type="button" class="btn btn-primary editprod btn-sm" id="edtprd-{{prdc.id}}">Edit</button><button type="button" class="btn btn-secondary canceledit btn-sm mt-1" id="cncledt-{{prdc.id}}">x</button></td>
+                    
+                    <!-- <td class="saveprod-dat"><button type="button" class="btn btn-primary saveprod" id="svprd1-{{prdc.id}}">Save</button></td> -->
+                    <td><button type="button" class="btn btn-danger delprod btn-sm" id="delprd-{{prdc.id}}">Delete</button></td>
+                  
+                </form>
+                     
+                </tr>
+
+                {% endfor %}
+          
+            </tbody>
+        
+        </table>
+       
+ 
+</div>
+
+
+
+</body>
+</html>

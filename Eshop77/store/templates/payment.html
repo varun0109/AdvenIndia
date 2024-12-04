@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block payment %}
+
+{% load static %}
+<div style="background-image:url('https://img.freepik.com/premium-photo/mix-nuts-dried-fruits-background-wallpaper-seen-from-side-view_78212-102.jpg?w=2000');height:800px;margin-top:-200px;" >
+
+ <div class="text-wrap" style="background-color:rgba(72, 76, 83, 0.573);margin:200px;padding:30px;text-align:center">
+     
+    <span style="color:rgb(251, 251, 251);font-size:large">Your Order order696 is Complete ..</span>
+ <br>
+ <br>
+ <span style="color:rgb(251, 251, 251);font-size:large"> We will deliver order by <b> Thursday March 9 , 2023</b>  </span>
+
+ <br>
+ <br>
+ <span style="color:rgb(5, 42, 255);font-size:x-large;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"> Order details have been shared on your email <b> Varun@gmail.com</b></span>
+ <br>
+ 
+ <br>
+ <a href="{% url 'homepage' %}" style="font-size: large;color:rgb(5, 42, 255)">Continue more shopping...</a>
+</div>
+ 
+</div>
+
+ 
+{% endblock %}

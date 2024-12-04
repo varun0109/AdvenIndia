@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+     <style>
+
+
+     </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+  
+      <script>
+        $(document).ready(function () { 
+          
+          
+
+        order_recs1=$(".order-recs1");
+        
+        
+
+        var temp1='none';
+        order_recs1.each(function(rec_idx,rec_li) {
+         
+            
+           
+            if (temp1==$(rec_li).attr('order-data')){
+            dup_id=$(rec_li).attr('id');
+           $("#"+dup_id).attr("style","display:none;")
+             
+            }
+            else{
+             
+             console.log(1);
+            }
+             
+            temp1=$(rec_li).attr('order-data')
+           
+           
+          });
+
+
+
+          $(".ord-submit").click(function(ev) {
+            var form = $("#formid");
+            var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(),
+                success: function(data) {
+                     console.log(data);
+                    // Ajax call completed successfully
+                    alert("Form Submited Successfully");
+                    location.reload();
+                },
+                error: function(data) {
+                      
+                    // Some error in ajax call
+                    alert("some Error",data);
+                }
+              });
+            });
+
+         
+        });
+      </script>
+</head>
+<body>
+    
+
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+        <div class="container-fluid">
+       
+      <a class="navbar-brand me-auto  ms-auto py-0"    href="/homepage" style="width:35%;height:8%;margin-right:0px;padding-right:0px;"> <img class="py-0" src="{% static 'brand3.svg' %}" style="width:28%;height:8%;margin-right:0px;padding-right:0px;">
+      </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="#">Admin</a>
+              <a class="nav-link active" style="color:#00FF00"  href="/load_product"><u>Load Products</u></a>
+              <a class="nav-link active" href="#"><u>Sold Products</u></a>
+              <a class="nav-link active" style="color:#00FF00" href="/admin_order_confrm"><u>Confirm Orders</u></a>
+              <a class="nav-link active" style="color:#00FF00" href="/usrpln_conf"><u>Update User Plan</u></a>
+             
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {% load cart %}
+{% load custom_filter %}
+
+
+<div class="container">
+    <input type="hidden" id="profile-name" value={{request.session.Name}} />
+   <div class="  rounded p-4 m-4">
+         
+        
+
+     
+          <div class="order-txt"><p class="display-4 pl-4 ml-4">All Orders</p></div>
+         
+           
+        
+
+
+
+        <hr>
+        <table class="table">
+          
+            
+            <thead>
+              <tr> <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th><button type="submit" value="submit" type="button" class="btn btn-secondary ord-submit" >submit</button></th></tr>
+              <form  id="formid" method="POST" action="/parse_orders">
+                {% csrf_token %}
+              <tr>
+                    <!-- <th>Sno.</th> -->
+                    
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Confirm</th>
+                    
+                     
+                    
+                </tr>
+            </thead>
+            <tbody>
+             
+                 
+                {% for order in orders %}
+                <tr class="order-recs1 px-0 mx-0" id="orderid-{{forloop.counter}}" order-data="order-{{order.order_id}}" style="background-color:#00000010;color:rgba(20, 144, 6, 0.994);font-weight:light"><td> ORDER{{order.order_id}} </td><td>{{order.customer.first_name}} {{order.customer.last_name}}</td><td>User - {{order.customer.username}}</td><td ></td><td></td><td></td><td></td><td></td></tr>
+                <tr>
+                     
+                    <!-- <td>{{forloop.counter}}</td> -->
+                    
+                    <td><img style="height: 80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></td>
+                    <td>{{order.product.name}}</td>
+                    <td>{{order.date}}</td>
+                    <td>{{order.price|currency}}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.quantity|multiply:order.price|currency}}</td>
+
+                    {% if order.status %}
+                    <td><small class="text-light bg-success rounded px-2 py-1" >Completed</small></td>
+                    <td><input type="checkbox" id=ord-{{order.id}} class="ord-chk1"  value={{order.id}} name="ordchecks1"></td>
+                    {% else %}
+                    <td><small class="text-light bg-warning rounded px-2 py-1 mx-2">Pending<span> </span></small></td>
+                    <td><input type="checkbox" id=ord-{{order.id}} class="ord-chk2" value={{order.id}} name="ordchecks2"></td>
+                    {% endif %}
+                    
+                     
+                     
+                     
+                </tr>
+
+                {% endfor %}
+          
+            </tbody>
+          </form>
+        </table>
+       
+   </div>
+</div>
+
+
+
+</body>
+</html>

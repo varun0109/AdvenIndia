@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+<!-- body -->
+
+
+<ul id="slider">
+	<li class="slide"><a href="/?category=3"><img
+				src="https://www.grocistore.com/admin/uploads/banners/web_banners/banner1576516931.JPG"
+				style="width:99%;height:350px;"></a></li>
+	<li class="slide"><a href="/?category=5"><img
+				src="https://rukminim1.flixcart.com/flap/1400/1400/image/15cbd99e6fcb6fc1.jpg?q=50"
+				style="width:99%;height:350px;" /></a></li>
+
+</ul>
+
+
+<!-- <carousel start> -->
+<!-- <carousel end> -->
+
+
+<div class="container-fluid mt-2 overflow-hidden">
+
+
+
+	<div class="row ">
+
+
+		<!-- filter -->
+
+
+		<div class="col-lg-2 col-sm-2 mx-auto my-2 ">
+			<div class="list-group ">
+
+				<a href="/" class="list-group-item list-group-item-action  ">All Products</a>
+
+				{% for category in categories %}
+				<a href="/?category={{category.id}}"
+					class="list-group-item list-group-item-action">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-10 col-md-10 col-sm-10 col-10 mx-auto ">
+			<div class="row mx-auto my-2">
+
+				{% for product in products %}
+				<div class="card mx-auto mb-3 card-columns card-wide" id={{product.id}}>
+					<img class="card-img-top img-fluid" src="{{product.image.url}}" alt="Card image cap" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop{{product.id}}"
+						style="width:100%;height:70%;" id="cardimgtop-{{product.id}}">
+
+
+					<!-- favourite and cart button -->
+					{% if product.id in favourites %}
+					<img src="{% static 'undofav.svg' %}" class="remfromfav" id="rfav-{{product.id}}"
+						class="filter-green" style="width:15px;height:15px;position:absolute;top:10%;right:3%;">
+
+					{% else %}
+					<span class="addfavtext">wishlist</span>
+					<img src="{% static 'favorite.svg' %}" class="addtofav" id="fav-{{product.id}}" class="filter-green"
+						style="width:15px;height:15px;position:absolute;top:10%;right:3%;">
+					{% endif %}
+
+					<span class="carttext">add to cart</span>
+					<img src="{% static 'cart.svg' %}" class="addcarticon" id="carticn-{{product.id}}"
+						style="width:20px;height:20px;position:absolute;top:24%;right:3%;">
+
+					<div class="card-body my-0 my-0 ml-1 py-0 px-0"
+						style="width:100%;height:25%; word-wrap: break-word;">
+						<div class="card-title card-text my-0"><b>{{product.name}}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+								&nbsp;
+								&nbsp; &nbsp;{{product.price|currency}}</b></div>
+
+					</div>
+
+					<!-- <div class="card-footer text-center bg-secondary my-0 mx-0 py-0 px-0" style="width:100%;height:18%;"
+						id="item-footer-{{product.id}}"> -->
+
+
+						{% with ind=product|cart_quantity:request.session.cart %}
+
+						<input type="hidden" id="prod-footer-{{product.id}}" class="prod-footer" value="{{ind}}" />
+
+						{% endwith %}
+         
+            <!-- comment for add to cart -->
+						<!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2"
+							id="prod-{{product.id}}" >Add to cart</button> -->
+            
+              <!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2"
+							id="prod-{{product.id}}" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop">Add to cart</button>
+              
+               -->
+					<!-- </div> -->
+
+				</div>
+
+
+
+        <!-- Modal -->
+  <div class="modal fade " id="staticitemBackdrop{{product.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h5 class="modal-title " id="staticBackdropLabel">Item Details</h5>
+        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="container-fluid">
+
+          <div class="row">
+            <div class="col-lg-7 border ">
+              <div class="row " style="height:500px" id="previewimg{{product.id}}">
+                <img
+                  src="{{product.image.url}}"
+                  class="w-100 h-100 viewitem my-1" id="viewitem-{{product.id}}" alt="loading">
+              </div>
+
+              <div class="row my-2" style="height:110px;background-color:rgb(254, 255, 255)">
+                <div class="col-lg-3 ">
+                  <img id="thumb1img{{product.id}}"
+                    src="{{product.image1.url}}"
+                    class="w-100 h-100 thumbimg" alt="loading">
+                </div>
+                <div class="col-lg-3 ">
+                  <img id="thumb2img{{product.id}}"
+                    src="{{product.image2.url}}"
+                    class="w-100 h-100 thumbimg" alt="loading">
+                </div>
+                <div class="col-lg-3 ">
+                  <img id="thumb3img{{product.id}}"
+                    src="{{product.image3.url}}"
+                    class="w-100 h-100 thumbimg" alt="loading">
+                </div>
+                <div class="col-lg-3 ">
+                  <img id="thumb4img{{product.id}}"
+                  src="{{product.image.url}}"
+                    class="w-100 h-100 thumbimg" alt="loading">
+                </div>
+              </div>
+
+
+            </div>
+
+            <div class="col-lg-5 border ">
+
+              <div class="row" style="height:240px;background-color:rgb(255, 255, 255)"">
+            <div class=" item-title pt-2" style="color:rgb(5, 5, 5);text-align:left;">
+                <h2>{{product.Product_brand}}</h2>
+              </div>
+              <div class="item-subtitle py-0" style="color:rgba(0, 0, 0, 0.539);;text-align:left;">
+                {{product.name}}
+              </div>
+              <div class="py-0">
+                <hr />
+                <span class="fa fa-star rating uncheck" ></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <div>
+                  <span class="itemprice">{{product.price|afterdiscount:product.discount|currency}}</span>
+                  {% if product.discount > 0 %}
+
+                  <span class="itemactualprice"><del>{{product.price|currency}}</del></span>
+
+                  <span class="itemdiscount">{{product.discount}}% OFF</span><br>
+
+                  {% endif %}
+                  <span class="itemtaxtext">inclusive of all taxes</span>
+                </div>
+                <hr style="margin-block-end:0.2em;">
+
+
+
+
+              </div>
+            </div>
+            <div class="row mx-1"
+              style="height:30px;width:100%;display: inline-block;background-color:rgba(255, 255, 255, 0.769)">
+
+             {% if product.category.id == 1 or product.category.id == 2 %}
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white;">S</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">M</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">L</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">XL</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">2XL</span>
+              <span class="itemsize-text px-0 py-0 mx-0 my-0"
+                style="position:relative;width:10px;top:1%;right:2px;color:#0d6efd ;font:12px Arial, sans-serif;">size
+                guide</span>
+
+              {% endif %}
+            </div>
+            <hr style="margin-block-end:0.2em;">
+
+            <div class="row offersrow" ">
+
+            
+              <span class="offertxt my-0 ">Save with offers
+                <span class="offertxticon mx-3 px-1" id="offertxticon-{{product.id}}">+</span></span>
+              <div class="offertxtdetails">
+
+                <ul>
+                  <li>extra 10% off for members</li>
+           
+                </ul>
+
+              </div>
+
+            </div>
+            <hr style="margin-block-end:0.2em;">
+            <div class="row returnrow">
+              <span class="returnpol  my-0">Return policy<span class="returnpolicon mx-3 px-1" id="returnpolicon-{{product.id}}">+</span>
+
+              </span>
+              <div class="returnpoldetails">
+                <ul>
+                  <li>free return within 3 days of purchase</li>
+                  <li>Call 9090999999 for return and refund</li>
+                  
+
+                </ul>
+              </div>
+
+            </div>
+            <hr style="margin-block-end:0.2em;">
+            <div class="row proddesrow">
+              <span class="proddesc  my-0">Product description<span class="proddescicon mx-3 px-1" id="proddescicon-{{product.id}}">+</span>
+
+              </span>
+              <div class="proddescdetails">
+                <ul>
+                  <li>{{product.Product_brand}}</li>
+                  <li>{{product.name}}</li>
+                  <li>{{product.description}}</li>
+       
+                </ul>
+
+              </div>
+
+            </div>
+            <hr style="margin-block-end:0.2em;">
+            <div class="row checkavailabilityrow w-100 mx-0 px-0 my-0 py-1" style="height:80px;">
+
+              <button type="button"  id="checkavaildis-{{product.id}}"
+                class="btn btn-link checkavailbutn mx-0 px-0 py-0"><u>check</u></button>
+              <input type="text" class="form-control  h-50 form-rounded mx-0 px-0 my-1 py-0 checkavailtext"
+                id="checkavailtext-{{product.id}}" placeholder="Enter pincode/areacode..">
+              <span class="py-0 px-0 addcitytext"  id="addcitytext-{{product.id}}" style="color: #0d6efd;font-size: small;font-family: Arial, Helvetica, sans-serif;"> </span>
+              <span class="py-0 px-0 availibilitytext"   id="availibilitytext-{{product.id}}"> </span>
+
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div class="modal-footer">
+  
+
+      {% if product.id in favs %}
+      
+        <button type="button" class="btn btn-outline-danger mx-1 mb-3 remfromfav" id="rfav-{{product.id}}" style="width:150px;" ><img
+          src="{% static 'undofav.svg' %}" style="width:25px;height:20px"><del>Wish
+        list</del></button>
+      {% else %}
+      
+      <button type="button" class="btn btn-outline-danger mx-1 mb-3 addtofav" id="fav-{{product.id}}" style="width:150px;"  ><img
+        src="{% static 'favorite.svg' %}" style="width:25px;height:20px"> Wish
+      list</button>
+      {% endif %}
+
+    
+      <button type="button" class="btn btn-primary mx-1 mb-3 adddcartbutn prod-add w-25" id="prod-{{product.id}}">Add to Cart</button>
+<!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2" id="prod-{{product.id}}" >Add to cart</button> -->
+    </div>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+				{% endfor %}
+
+			</div>
+		</div>
+		<!-- <end all products> -->
+	</div>
+</div>
+
+
+<!-- Modal to show item details -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop">
+    Launch static backdrop modal
+  </button> -->
+
+
+
+
+
+  
+{% endblock %}

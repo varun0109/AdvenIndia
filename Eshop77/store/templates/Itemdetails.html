@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+    .checked {
+      color: rgba(255, 218, 11, 0.924);
+    }
+
+    .uncheck {
+      color: rgba(223, 194, 31, 0.223);
+    }
+    .rating{
+      cursor: pointer;
+    }
+    
+
+    .item-size {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+    }
+
+    .itemsize {
+      border-radius: 10px;
+    }
+
+    .thumbimg {
+
+      cursor: pointer;
+    }
+
+    .itemsize {
+
+      cursor: pointer;
+    }
+
+    .itemdiscount {
+      color: rgba(21, 139, 0, 0.766);
+    }
+
+    .itemprice {
+      font-weight: bold;
+      font-size: larger;
+    }
+
+    .itemactualprice {
+
+      color: rgba(0, 0, 0, 0.539);
+      font-size: small
+    }
+
+    .itemtaxtext {
+      color: rgba(0, 0, 0, 0.539);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: small;
+    }
+
+    .checkavailabilityrow {
+      display: inline-block;
+    }
+
+    .checkavailtext {
+      overflow: hidden;
+      width: 70%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(0, 0, 0, 0.725)
+    }
+
+    .checkavailbutn {
+
+      position: relative;
+      left: 70%;
+      top: 0%;
+      width: 50px;
+      height: 25px;
+
+    }
+
+    #availibilitytext {
+      color: #0b4293;
+      font-size: small;
+      font-family: Arial, Helvetica, sans-serif;
+      position: relative;
+      bottom: 8%;
+      left: 2%;
+      width: 100px;
+
+
+    }
+
+    #addcitytext {
+
+      color: #0d6efd;
+      font-size: medium;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .proddesc {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .offertxt {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .returnpol {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .offertxticon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+    .returnpolicon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+    .proddescicon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+
+    .offertxtdetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+    }
+
+
+    .returnpoldetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+
+    }
+
+    .proddescdetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+
+    }
+
+    ul {
+      list-style-type: decimal;
+    }
+
+    .itemsize-text{
+      cursor: pointer;
+
+    }
+  </style>
+  <title>Welcome to Eshop!!</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script> -->
+
+
+
+
+  <title>Document</title>
+</head>
+
+<body>
+
+  <!-- modal button -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Launch static backdrop modal
+  </button>
+
+
+
+
+
+  <!-- Modal -->
+  <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header ">
+          <h5 class="modal-title " id="staticBackdropLabel">Item Details</h5>
+          <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+
+        <div class="modal-body">
+          <div class="container-fluid">
+
+            <div class="row">
+              <div class="col-lg-7 border ">
+                <div class="row " style="height:500px" id="previewimg">
+                  <img
+                    src="https://images.bewakoof.com/t1080/certified-troublemakers-half-sleeve-t-shirt-tjl-black-287865-1655748203-1.jpg?tr=q-100"
+                    class="w-100 h-100 viewitem my-1" alt="loading">
+                </div>
+
+                <div class="row my-2" style="height:110px;background-color:rgb(254, 255, 255)">
+                  <div class="col-lg-3 ">
+                    <img id="thumb1img"
+                      src="https://images.bewakoof.com/t1080/certified-troublemakers-half-sleeve-t-shirt-tjl-black-287865-1655748208-2.jpg?tr=q-100"
+                      class="w-100 h-100 thumbimg" alt="loading">
+                  </div>
+                  <div class="col-lg-3 ">
+                    <img id="thumb2img"
+                      src="https://images.bewakoof.com/t1080/certified-troublemakers-half-sleeve-t-shirt-tjl-black-287865-1655748213-3.jpg"
+                      class="w-100 h-100 thumbimg" alt="loading">
+                  </div>
+                  <div class="col-lg-3 ">
+                    <img id="thumb3img"
+                      src="https://images.bewakoof.com/t1080/certified-troublemakers-half-sleeve-t-shirt-tjl-black-287865-1655748218-4.jpg"
+                      class="w-100 h-100 thumbimg" alt="loading">
+                  </div>
+                  <div class="col-lg-3 ">
+                    <img id="thumb4img"
+                      src="https://images.bewakoof.com/t1080/certified-troublemakers-half-sleeve-t-shirt-tjl-black-287865-1655748203-1.jpg"
+                      class="w-100 h-100 thumbimg" alt="loading">
+                  </div>
+                </div>
+
+
+              </div>
+
+              <div class="col-lg-5 border ">
+
+                <div class="row" style="height:240px;background-color:rgb(255, 255, 255)"">
+              <div class=" item-title pt-2" style="color:rgb(5, 5, 5);text-align:left;">
+                  <h2>Bewakoof</h2>
+                </div>
+                <div class="item-subtitle py-0" style="color:rgba(0, 0, 0, 0.539);;text-align:left;">
+                  Men Black Slim Fit Casual Shirt
+                </div>
+                <div class="py-0">
+                  <hr />
+                  <span class="fa fa-star rating uncheck" ></span>
+                  <span class="fa fa-star rating uncheck"></span>
+                  <span class="fa fa-star rating uncheck"></span>
+                  <span class="fa fa-star rating uncheck"></span>
+                  <span class="fa fa-star rating uncheck"></span>
+                  <div>
+                    <span class="itemprice">₹599</span>
+                    <span class="itemactualprice"><del>₹1499</del></span>
+                    <span class="itemdiscount">60% OFF</span><br>
+                    <span class="itemtaxtext">inclusive of all taxes</span>
+                  </div>
+                  <hr style="margin-block-end:0.2em;">
+
+
+
+
+                </div>
+              </div>
+              <div class="row mx-1"
+                style="height:30px;width:100%;display: inline-block;background-color:rgba(255, 255, 255, 0.769)">
+
+
+                <span class="h-100 w-100 bg-secondary itemsize" style="color:white;">S</span>
+                <span class="h-100 w-100 bg-secondary itemsize" style="color:white">M</span>
+                <span class="h-100 w-100 bg-secondary itemsize" style="color:white">L</span>
+                <span class="h-100 w-100 bg-secondary itemsize" style="color:white">XL</span>
+                <span class="h-100 w-100 bg-secondary itemsize" style="color:white">2XL</span>
+                <span class="itemsize-text px-0 py-0 mx-0 my-0"
+                  style="position:relative;width:10px;top:1%;right:2px;color:#0d6efd ;font:12px Arial, sans-serif;">size
+                  guide</span>
+
+
+              </div>
+              <hr style="margin-block-end:0.2em;">
+
+              <div class="row offersrow" ">
+
+              
+                <span class="offertxt my-0 ">Save extra with 3 offers
+                  <span class="offertxticon mx-3 px-1">+</span></span>
+                <div class="offertxtdetails">
+
+                  <ul>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                  </ul>
+
+                </div>
+
+              </div>
+              <hr style="margin-block-end:0.2em;">
+              <div class="row returnrow">
+                <span class="returnpol  my-0">Return policy<span class="returnpolicon mx-3 px-1">+</span>
+
+                </span>
+                <div class="returnpoldetails">
+                  <ul>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                    <li>these are details.Offer valid.</li>
+
+                  </ul>
+                </div>
+
+              </div>
+              <hr style="margin-block-end:0.2em;">
+              <div class="row proddesrow">
+                <span class="proddesc  my-0">Product description<span class="proddescicon mx-3 px-1">+</span>
+
+                </span>
+                <div class="proddescdetails">
+                  <ul>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                    <li>these are details.Offer valid.</li>
+                    <li>these are details.Offer 10%.</li>
+                    <li>these are details.Offer 20%.</li>
+                  </ul>
+
+                </div>
+
+              </div>
+              <hr style="margin-block-end:0.2em;">
+              <div class="row checkavailabilityrow w-100 mx-0 px-0 my-0 py-1" style="height:80px;">
+
+                <button type="button" id="checkavaildis"
+                  class="btn btn-link checkavailbutn mx-0 px-0 py-0"><u>check</u></button>
+                <input type="text" class="form-control  h-50 form-rounded mx-0 px-0 my-1 py-0 checkavailtext"
+                  placeholder="Enter pincode/areacode..">
+                <span class="py-0 px-0" id="addcitytext"> </span>
+                <span class="py-0 px-0" id="availibilitytext"> </span>
+
+              </div>
+
+
+
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger mx-1 mb-3" style="width:150px;" data-bs-dismiss="modal"><img
+            src="../static/favorite.svg" style="width:25px;height:20px"> Wish
+          list</button>
+        <button type="button" class="btn btn-primary mx-1 mb-3 adddcartbutn">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script type="text/javascript">
+
+   
+
+    $(document).ready(function () {
+
+      // add to cart
+
+      $('.adddcartbutn').click(function(){
+      //submit form
+       item_rating=$('.checked').length
+       
+
+      });
+
+      var viewimg = $('.viewitem').attr('src')
+      
+      // size guide .. **change it to new image**
+      $('.itemsize-text').click(function(){
+        $('.viewitem').attr('src', "https://cdn.shopify.com/s/files/1/2374/2011/files/Cortazu_sizechart_Mens_CM_df704e89-0803-4a3b-aa02-d01b4c30c582.png?v=1594990748");
+
+        // 
+       })
+
+
+      $('.thumbimg').hover(function () {
+        $('.viewitem').attr('src', $(this).attr('src'));
+      }
+
+
+      );
+
+      $('.rating').click(function () {
+        var star_rating = []
+        star_rating = $(this).attr('class');
+       
+        
+        if (!star_rating.includes('checked')) {
+          $(this).attr('class', 'fa fa-star rating checked');
+          
+        } else {
+          
+          $(this).attr('class', 'fa fa-star rating uncheck');
+        }
+      });
+
+      /* $('.thumbimg').click(function(){
+        $('.viewitem').attr('src',$(this).attr('src'));
+    
+    
+       });*/
+
+      //in the search pincode remove old text 'item available'
+      const rem_availtxt = document.querySelector('.checkavailtext');
+      rem_availtxt.onkeyup = (e) => {
+
+        $('#availibilitytext').text('');
+        $('#addcitytext').text('');
+      }
+
+
+      //code to expand the prod description , return policy and offers on click
+
+      $('.returnpolicon').click(function () {
+
+        if ($('.returnpolicon').text() == '-') {
+          $('.returnpoldetails').attr('style', 'display:none');
+          $('.returnpolicon').text('+');
+        }
+        else {
+          $('.returnpolicon').text('-');
+          $('.proddescicon').text('+');
+          $('.offertxticon').text('+');
+           
+
+          $('.offertxtdetails').attr('style', 'display:none');
+          $('.proddescdetails').attr('style', 'display:none');
+          $('.offersrow').attr('style', 'heigth:2rem');
+          $('.proddesrow').attr('style', 'heigth:2rem');
+          $('.returnrow').attr('style', 'heigth:5em');
+          $('.returnpoldetails').attr('style', 'display:block');
+          $('.returnpoldetails').attr('class', 'returnpoldetails collapsedetails');
+
+        }
+
+      });
+
+      $('.proddescicon').click(function () {
+        if ($('.proddescicon').text() == '-') {
+          $('.proddescdetails').attr('style', 'display:none');
+          $('.proddescicon').text('+');
+
+        }
+        else {
+          $('.proddescicon').text('-');
+          $('.offertxticon').text('+');
+          $('.returnpolicon').text('+');
+          $('.offertxtdetails').attr('style', 'display:none');
+          $('.returnpoldetails').attr('style', 'display:none');
+          $('.offersrow').attr('style', 'heigth:2rem');
+          $('.returnrow').attr('style', 'heigth:2rem');
+          $('.proddesrow').attr('style', 'heigth:5em');
+          $('.proddescdetails').attr('style', 'display:block');
+
+        }
+      });
+
+      $('.offertxticon').click(function () {
+        if ($('.offertxticon').text() == '-') {
+          $('.offertxtdetails').attr('style', 'display:none');
+          $('.offertxticon').text('+');
+
+        }
+        else {
+          $('.offertxticon').text('-');
+          $('.returnpolicon').text('+');
+          $('.proddescicon').text('+');
+          $('.proddescdetails').attr('style', 'display:none');
+          $('.returnpoldetails').attr('style', 'display:none');
+          $('.proddesrow').attr('style', 'heigth:2rem');
+          $('.returnrow').attr('style', 'heigth:2rem');
+          $('.offersrow').attr('style', 'heigth:5em');
+          $('.offertxtdetails').attr('style', 'display:block');
+        }
+
+
+      });
+
+    });
+
+
+
+
+
+    //js to calculate distance
+
+
+
+    // $('#checkavaildis').click(get_distance);
+    $('#checkavaildis').click(function () {
+
+      if ($('.checkavailtext').val().trim().length == 6) {
+
+        var pincode = $('.checkavailtext').val().trim();
+
+
+        //////////////////
+        $.ajax(
+          {
+            url: 'searchloc',
+            type: 'get',
+            data: {
+              zipcode: pincode
+            },
+            success: function (response) {
+              console.log(response);
+              place = response.split('-')[0];
+
+              state = response.split('-')[1];
+              d = response.split('-')[2];
+              city=response.split('-')[3];
+
+              if (d < 20) {
+                $('#availibilitytext').text('Item is available');
+                $('#addcitytext').text(place + ', ' + city+','+state);
+                $('#availibilitytext').attr('style', 'color:green');
+              }
+              else {
+                $('#addcitytext').text(place + ', ' + state);
+                $('#availibilitytext').text('Item not available');
+                $('#availibilitytext').attr('style', 'color:red');
+              }
+
+
+            }
+          }
+        );
+        ///////////////
+
+
+
+      }
+      else {
+        $('#availibilitytext').text('pincode length should be 6');
+        $('#availibilitytext').attr('style', 'color:red');
+
+      }
+    });
+
+  </script>
+</body>
+
+</html>

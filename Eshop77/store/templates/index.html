@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+<!-- body -->
+
+<!-- user name -->
+<input type="hidden" id="profile-name" value={{request.session.Name}} />
+
+<!-- <ul id="slider" >
+	<li class="slide mx-5"><a href="/store?category=3"><img
+				src="https://www.grocistore.com/admin/uploads/banners/web_banners/banner1576516931.JPG"
+				style="width:99%;height:350px;"></a></li>
+	<li class="slide mx-5"><a href="/store?category=5"><img
+				src="https://rukminim1.flixcart.com/flap/1400/1400/image/15cbd99e6fcb6fc1.jpg?q=50"
+				style="width:99%;height:350px;" /></a></li> -->
+
+  <!-- <li class="slide"><a href="/store?category=6"><img
+          src="{% static 'laundry_banner.jpg' %}"
+          style="width:99%;height:350px;" /></a></li> -->
+
+  <!-- <li class="slide mx-5"><a href="/store?category=6"><img
+            src="{% static 'personal_care.jpg' %}"
+            style="width:99%;height:350px;" /></a></li>
+
+</ul> -->
+
+
+<!-- <carousel start> -->
+<!-- <carousel end> -->
+
+
+<div class="container-fluid mt-2 overflow-hidden ">
+
+
+
+	<div class="row  my-2 py-2 ">
+
+
+		<!-- filter -->
+   
+
+
+		<!-- <div class="col-lg-2 col-sm-2 mx-auto my-2 "> -->
+  
+
+    <!-- <div class="row mx-2 mb-1">
+			<div class="list-group list-group-horizontal ">
+
+        {% for category in categories %}
+        {% if forloop.counter > 15  %}
+        
+				<a href="/store?category={{category.id}}"
+					class="list-group-item list-group-item-action  px-1 w-50 bg-warning text-dark">{{category.name}}</a>
+         
+          {% endif %}
+          {% endfor %}
+			</div>
+		</div> -->
+
+
+		<!-- all products -->
+		<div id='products' class="col-lg-10 col-md-10 col-sm-10 col-10 mx-auto bg-light py-2">
+			<div class="row mx-auto my-2">
+
+				{% for product in products %}
+				<div class="card mx-auto mb-3 card-columns card-wide px-0 " id={{product.id}}>
+					<img class="card-img-top img-fluid" src="{{product.image.url}}" alt="Card image cap" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop{{product.id}}"
+						style="width:100%;height:70%;" id="cardimgtop-{{product.id}}">
+
+
+					<!-- favourite and cart button -->
+
+					{% if product.id in customer_favs %}
+					<img src="{% static 'undofav.svg' %}" class="remfromfav filter-green" id="rfav-{{product.id}}"
+						  style="width:15px;height:15px;position:absolute;top:10%;right:3%;visibility:hidden">
+              <span class="addfavtext" id="addfavtext-{{product.id}}" >In Wishlist</span>
+					{% else %}
+					<span class="addfavtext" id="addfavtext-{{product.id}}" >wishlist</span>
+					<img src="{% static 'favorite.svg' %}" class="addtofav filter-green" id="fav-{{product.id}}"
+						style="width:15px;height:15px;position:absolute;top:10%;right:3%;visibility:hidden">
+					{% endif %}
+
+          <!---- favourite end ---->
+					<span class="carttext ">add to cart</span>
+					<img src="{% static 'cart.svg' %}" class="addcarticon" id="carticn-{{product.id}}"
+						style="width:20px;height:20px;position:absolute;top:24%;right:3%;">
+
+					<div class="card-body my-0 my-0 ml-1 py-0 px-1  "
+						style="width:100%;height:18%; word-wrap: break-word;">
+						<div class="card-title card-text my-0 " style="color:#606060;font-family: 'Rubik', sans-serif;text-align:center"><small><b>{{product.name}}</b></small></div>
+
+					</div>
+
+					<div class="card-footer text-center  my-0 mx-0 py-0 px-0" style="width:100%;height:10%;"
+						id="item-footer-{{product.id}}">
+              <span class="itemprice-inx">{{product.price|afterdiscount:product.discount|currency}}</span>
+
+                  {% if product.discount > 0 %}
+
+                  <span class="itemactualprice"><del>{{product.price|currency}}</del></span>
+
+                  {% endif %}
+          </div>
+
+
+						{% with ind=product|cart_quantity:request.session.cart %}
+
+						<input type="hidden" id="prod-footer-{{product.id}}" class="prod-footer" value="{{ind}}" />
+
+						{% endwith %}
+
+            <!-- comment for add to cart -->
+						<!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2"
+							id="prod-{{product.id}}" >Add to cart</button> -->
+
+              <!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2"
+							id="prod-{{product.id}}" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop">Add to cart</button>
+
+               -->
+					<!-- </div> -->
+
+				</div>
+
+
+
+        <!-- Modal -->
+  <div class="modal fade " id="staticitemBackdrop{{product.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-sm">
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h5 class="modal-title " id="staticBackdropLabel">Item Details</h5>
+        <button type="button" class="btn-close " data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="modal-body">
+        <div class="container-fluid">
+
+          <div class="row idxmodal-size">
+            <div class="col-lg-7  col-sm-7  border " style="height:100%" >
+              <div class="row my-0 py-0" style="height:415px" id="previewimg{{product.id}}">
+                <img
+                  src="{{product.image.url}}"
+                  class="h-100 w-100  viewitem my-0 py-0" id="viewitem-{{product.id}}" alt="loading">
+              </div>
+
+
+              {% if product.category.id in disp_list %}
+              <div class="row my-2" style="height:98px;background-color:rgb(254, 255, 255)">
+
+              {% if product.image1.url != '/image/download/uploads/products/default-profile-.png'  %}
+                <div class="col-lg-3 col-md-3 col-sm-3 thumbimg my-0">
+                  <img id="thumb1img{{product.id}}"
+                    src="{{product.image1.url}}"
+                    class="w-100 h-75 thumbimg my-0" alt="loading">
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 thumbimg my-0" >
+                  <img id="thumb4img{{product.id}}"
+                  src="{{product.image.url}}"
+                    class="w-100 h-75 thumbimg my-0" alt="loading">
+                </div>
+
+
+                {% endif %}
+                {% if product.image2.url != '/image/download/uploads/products/default-profile-.png'  %}
+                <div class="col-lg-3 col-md-3 col-sm-3 thumbimg my-0">
+                  <img id="thumb2img{{product.id}}"
+                    src="{{product.image2.url}}"
+                    class="w-100 h-75 thumbimg my-0" alt="loading">
+                </div>
+                {% endif %}
+                {% if product.image3.url != '/image/download/uploads/products/default-profile-.png'  %}
+                <div class="col-lg-3 col-md-3 col-sm-3 thumbimg my-0">
+                  <img id="thumb3img{{product.id}}"
+                    src="{{product.image3.url}}"
+                    class="w-100 h-75 thumbimg my-0" alt="loading">
+                </div>
+                {% endif %}
+
+
+
+
+              </div>
+
+              {% endif %}
+
+
+            </div>
+
+            <div class="col-lg-5  col-sm-5     " style="height:100%">
+
+              <div class="row" style="height:32%;background-color:rgb(255, 255, 255)">
+            <div class=" item-title pt-2" style="color:rgb(5, 5, 5);text-align:left;">
+                <h2>{{product.name}} </h2>
+              </div>
+              <div class="item-subtitle py-0" style="color:rgba(0, 0, 0, 0.539);;text-align:left;">
+                  {{product.Product_brand}}
+              </div>
+              <div class="py-0">
+                 <hr style="margin-block-end:0.2em;" class="my-1">
+                <span class="fa fa-star rating uncheck" ></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <span class="fa fa-star rating uncheck"></span>
+                <div>
+                  <span class="itemprice">{{product.price|afterdiscount:product.discount|currency}}</span>
+                  {% if product.category.id == 9 %}
+                  <span style="color:blue;font-style: italic;font-size: 1em;">per kilo watt</span>
+                  {% endif %}
+                  {% if product.discount > 0 %}
+
+                  <span class="itemactualprice"><del>{{product.price|currency}}</del></span>
+
+                  <span class="itemdiscount">{{product.discount}}% OFF</span><br>
+
+                  {% endif %}
+                  <span class="itemtaxtext">inclusive of all taxes</span>
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+            <div class="row mx-1 my-3"
+              style="height:7%;width:100%;display: inline-block;">
+
+             {% if product.category.id == 1 or product.category.id == 2 %}
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white;">S</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">M</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">L</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">XL</span>
+              <span class="h-100 w-100 bg-secondary itemsize" style="color:white">2XL</span>
+              <span class="itemsize-text px-0 py-0 mx-0 my-0"
+                style="position:relative;width:10px;top:1%;right:2px;color:#0d6efd ;font:12px Arial, sans-serif;">size
+                guide</span>
+
+              {% endif %}
+
+              <!-- {% if product.category.id == 9 %}
+              <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected>Open this select menu</option>
+                <option value="1" >3KW to 5KW(1P)</option>
+                <option value="2">6KW to 9KW(3P)</option>
+                <option value="3">10KW to 20KW</option>
+                <option value="1">21KW to 50KW</option>
+                <option value="2">51KW to 100KW</option>
+                <option value="3">101KW to 150KW</option>
+                <option value="3">Three</option>
+                <option value="3">Three</option>
+              </select>
+
+              {% endif %} -->
+
+
+            </div>
+
+
+            <div class="row offersrow" ">
+              <hr style="margin-block-end:0.2em;" class="my-1">
+
+              <span class="offertxt my-0 ">Save with offers
+                <span class="offertxticon mx-3 px-1" id="offertxticon-{{product.id}}">+</span></span>
+              <div class="offertxtdetails">
+
+                <ul>
+                  <li>Business Volume <b>{{product.BV_gained}}</b> for members</li>
+
+                </ul>
+
+              </div>
+
+            </div>
+
+            <div class="row returnrow"  >
+              <hr style="margin-block-end:0.2em;" class="my-1">
+              <span class="returnpol  my-0">Return policy<span class="returnpolicon mx-3 px-1" id="returnpolicon-{{product.id}}">+</span>
+
+              </span>
+              <div class="returnpoldetails">
+                <ul>
+                  <li>free return within 3 days of purchase</li>
+                  <li>Call +919090999999 or write to info@advenmart.shop for return and refund</li>
+              </ul>
+              </div>
+
+            </div>
+
+            <div class="row proddesrow"    >
+              <hr style="margin-block-end:0.2em;" class="my-1">
+              <span class="proddesc  my-0">Product description<span class="proddescicon mx-3 px-1" id="proddescicon-{{product.id}}">+</span>
+
+              </span>
+              <div class="proddescdetails">
+                <ul>
+
+                  <li>{{product.name}}</li>
+                  <li>{{product.description}}</li>
+
+                </ul>
+
+              </div>
+              <hr style="margin-block-end:0.2em;" class="my-1">
+
+            </div>
+
+            <div class="row checkavailabilityrow w-100 mx-0 px-0 my-0 py-1" style="height:12%;">
+
+              {% if product.quantity > 0 %}
+              <button type="button"  id="checkavaildis-{{product.id}}"
+               class="btn btn-link checkavailbutn mx-0 px-0 py-0"><u>check</u></button>
+
+               {% else %}
+               <span style="color: #fd0d11;font-size: small;font-family: Arial, Helvetica, sans-serif;"> item not available </span>
+
+               {% endif %}
+
+              <input type="text" class="form-control  h-50 form-rounded mx-0 px-0 my-1 py-0 checkavailtext"
+                id="checkavailtext-{{product.id}}" placeholder="Enter pincode/areacode..">
+              <span class="py-0 px-0 addcitytext"  id="addcitytext-{{product.id}}" style="color: #0d6efd;font-size: small;font-family: Arial, Helvetica, sans-serif;"> </span>
+              <span class="py-0 px-0 availibilitytext"   id="availibilitytext-{{product.id}}"> </span>
+
+            </div>
+
+
+
+          </div>
+        </div>
+
+
+
+
+      </div>
+    </div>
+    <div class="modal-footer">
+
+       <!-- {% if product.id in favs %}
+
+       <button type="button" class="btn btn-outline-danger mx-1 mb-3 addtofav" id="fav-{{product.id}}" style="width:190px;"  > Already in WishList
+      </button>
+
+      {% else %}
+
+
+      <button type="button" class="btn btn-outline-danger mx-1 mb-3 addtofav" id="fav-{{product.id}}" style="width:150px;"  ><img
+        src="{% static 'favorite.svg' %}" style="width:25px;height:20px"> Wish
+      list</button>
+      {% endif%} -->
+
+
+
+      {% if product.quantity > 0 %}
+      <button type="button" class="btn btn-primary mx-1 mb-3 adddcartbutn prod-add w-25  " id="prod-{{product.id}}" >Add to Cart</button>
+      {% else %}
+      <span style="color:rgba(255, 0, 0, 0.5);font-size:medium">out of stock</span>
+      <button type="button" class="btn btn-primary mx-1 mb-3 adddcartbutn prod-add w-25" id="prod-{{product.id}}" style="pointer-events: none;opacity:0.4;">Add to Cart</button>
+      {% endif %}
+      <!-- <button class="btn  btn-sm prod-add text-center bg-secondary text-white my-2" id="prod-{{product.id}}" >Add to cart</button> -->
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+				{% endfor %}
+
+			</div>
+		</div>
+		<!-- <end all products> -->
+	</div>
+</div>
+
+
+<!-- Modal to show item details -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticitemBackdrop">
+    Launch static backdrop modal
+  </button> -->
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,738 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">  -->
+
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+
+  <link rel="stylesheet" href="{% static 'css/itemdetails.css' %}" >
+  <link rel="stylesheet" href="{% static 'css/about.css' %}" >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@400;500&family=Rubik:wght@500;600&display=swap" rel="stylesheet">
+
+  <title>Shop Online Grocery,Personale Care,Daily needs</title>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+
+ 
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+
+  <script>
+
+  
+
+    $(document).ready(function () {
+
+
+
+      var profile_username=$("#profile-name").val();
+      
+      $(".prof-span-txt").text(' '+profile_username);
+      qcart();
+
+      function qcart() {
+        $.ajax(
+          {
+            url: 'cart_quan',
+            type: 'get',
+            success: function (response) {
+              console.log($("#cart-head").html(response));
+
+
+            }
+          }
+        );
+      }
+ 
+
+      // add order id as row in the order page //
+         
+         order_recs=$(".order-recs");
+         var temp='none';
+         order_recs.each(function(rec_idx,rec_li) {
+          
+             
+            
+             if (temp==$(rec_li).attr('order-data')){
+             dup_id=$(rec_li).attr('id');
+            $("#"+dup_id).attr("style","display:none;")
+              
+             }
+             else{
+              
+              console.log($(rec_li).attr('id'));
+             }
+              
+             temp=$(rec_li).attr('order-data')
+            
+            
+           });
+
+         
+
+        
+
+
+      // change the cart text to remove or add to cart based on cart value
+      queu = $(".card-footer");
+      queu.each(function (idx, li) {
+        let product = $(li);
+        let qvalue = $(product.children("input.prod-footer"));
+
+        qvalue.each(function (idx2, li2) {
+          let prod3 = $(li2);
+
+          if ($(prod3).attr("value") > 0) {
+            let prod4 = $(prod3).next("button.prod-add");
+
+            $(prod4).text('Remove');
+            $(prod4).attr("class", "btn  btn-sm prod-add text-center bg-success text-white my-2");
+
+
+
+          }
+
+        });
+      });
+
+
+
+
+      // offer slider
+      $('#slider>li:gt(0)').hide;
+      setInterval(function () {
+        $('#slider > li:first')
+          .fadeOut(1000)
+          .next()
+          .fadeIn(1000)
+          .end()
+          .appendTo('#slider');
+      }, 2000);
+
+     
+      
+      
+      $(".prod-add").click(function () {   //cart Add to cart
+        var prodid = parseInt($(this).attr('id').split('-')[1]);
+        var value = parseInt(prodid); //productId
+        if ($('#prod-' + prodid).html().trim() == 'Remove') {
+          counter = 0;
+        }
+        else {
+          counter = 1;
+        }
+       
+
+        $.ajax(
+          {
+            url: '/homepage',
+            async : true,
+            type: 'post',
+            data: {
+              product: value,
+              quantity: counter,
+              aj_counter:1,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              console.log(response);
+              if ($('#prod-' + prodid).html().trim() == "Add to Cart") {
+                $('#prod-' + prodid).html(`Remove`);
+                $('#prod-' + prodid).attr("class", "btn btn-primary mx-1 mb-3 adddcartbutn prod-add w-25" );
+                qcart();
+              }
+              else {
+                $('#prod-' + prodid).html("Add to Cart");
+                $('#prod-' + prodid).attr("class", "btn btn-primary mx-1 mb-3 adddcartbutn prod-add w-25");
+                qcart();
+              }
+            }
+          }
+        );
+      }
+      ); //
+
+      $(".del-item").click(remove_item);
+
+      function remove_item() {       // cart empty 
+
+        var prodid = parseInt($(this).attr('id').split('-')[1]);
+        var value = parseInt(prodid); //productId
+
+
+        $.ajax(
+          {
+            url: '/homepage' ,
+            type: 'post',
+            data: {
+              product: value,
+              quantity: parseInt(0),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              console.log(response);
+
+
+              $('#item-' + value).remove();
+              location.reload();
+
+
+            }
+
+          }
+        );
+      }
+
+      $(".cart-rem").click(function () {     //cart -
+        var rem_counter = 0;
+        var productid = $(this).attr("id").split('-')[1];
+        rem_counter = parseInt($('#quan-' + productid).text())
+
+
+        if (rem_counter > 0) {
+
+          rem_counter--;
+        }
+        else {
+          $('#prod-' + productid).text(`Add to cart`);
+        }
+
+        $.ajax(
+          {
+            url: '/homepage',
+            type: 'post',
+            data: {
+              product: productid,
+              quantity: rem_counter,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              //console.log('/#' + productid, response);
+              $('#quan-' + productid).text(rem_counter);
+              location.reload();
+
+            }
+
+          }
+        );
+      }
+
+      );
+
+
+      $(".cart-add").click(function () {  //cart +
+        var add_counter = 0;
+
+        var productid = $(this).attr("id").split('-')[1];
+        add_counter = $('#quan-' + productid).text();
+        add_counter++;
+
+        $.ajax(
+          {
+            url: '/homepage',
+            type: 'post',
+            data: {
+              product: productid,
+              quantity: add_counter,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              //console.log('/#' + productid, response);
+              $('#quan-' + productid).text(add_counter);
+              location.reload();
+
+            }
+
+          }
+        );
+
+      });
+
+
+
+
+    });
+
+
+  </script>
+
+
+
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+    .thumbimg{
+      display:block;
+    }
+    nav {
+      background-color: rgba(15, 7, 253, 0);
+    }
+
+    .one-edge-shadow {
+      box-shadow: 0 8px 2px -5px rgb(195, 192, 192);
+    }
+
+    .display-8 {
+      font-weight: 200;
+      font-size: 30px;
+    }
+    .card-img-top{
+      cursor: pointer;
+
+    }
+    #slider {
+
+      width: 99%;
+      height: 350px;
+
+
+      position: relative;
+    }
+
+    .slide {
+      list-style: none;
+    }
+
+    #slider>li {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+    }
+
+    #empty-cart-icon {
+
+      width: 25px;
+      height: 20px;
+
+    }
+
+    .overlay {
+      position: absolute;
+      top: 40%;
+      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.5);
+      /* Black see-through */
+      color: #f1f1f1;
+      width: 80%;
+      transition: .5s ease;
+      opacity: 0;
+      color: white;
+      font-size: 100%;
+      padding: 2%;
+      text-align: center;
+      margin-left: 2%;
+    }
+
+   
+
+    .cat-card:hover .overlay {
+      opacity: 1;
+
+    }
+
+    .cat-card:hover {
+      transform: scale(1.2);
+    }
+
+    .flash-card:hover {
+      transform: scale(1.2);
+    }
+
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.442);
+    }
+
+    .icon img {
+      color: #4b75ff;
+      cursor: pointer;
+
+    }
+
+    .autocom-box1 {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      background-color: #ffffff;
+      width: 90%;
+      border-radius: 10px;
+      list-style: none;
+
+
+    }
+
+    .autocom-box1 li:hover {
+      background: #efefef;
+    }
+
+    .search-wrapper .autocom-box1 {
+      padding: 0;
+      opacity: 0;
+      pointer-events: none;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .search-wrapper.active .autocom-box1 {
+      padding: 10px 8px;
+      opacity: 1;
+      pointer-events: auto;
+       
+    }
+
+    .autocom-box1 li {
+      list-style: none;
+
+      cursor: default;
+      border-radius: 2px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #000000b2;
+    }
+
+
+    /* style for favourite icon */
+
+    .addtofav:hover {
+    opacity:0.7 ;
+    transform: scale(1.2);
+    cursor: pointer;
+   
+    }
+
+    .remfromfav:hover {
+      opacity:0.7 ;
+      
+      cursor: pointer;
+      }
+    
+      .addcarticon:hover
+      {
+        opacity:0.7 ;
+        transform: scale(1.2);
+        cursor: pointer;
+        }
+
+      .carttext{
+        position:absolute;
+        top:18%;
+        right:1%;
+        font-weight: 1px;
+        font: italic  10px/30px Georgia, serif;
+        color:#4b75ff;
+        visibility: hidden;
+      
+      }
+
+      .addcarticon{
+        visibility: hidden;
+         
+      }
+
+       .addfavtext{
+        position:absolute;
+        top:3%;
+        right:1%;
+        font-weight: 1px;
+        font: italic  11px/30px Georgia, serif;
+        color:#4b75ff;
+        visibility: hidden;
+        
+    
+      }
+
+   
+    .badge-card:hover{
+      opacity:0.7 ; 
+      transform: scale(1.5);
+      cursor: pointer;
+    }
+
+    .card-img-top:hover{
+      opacity:0.8 ; 
+      
+    }
+
+    .card-wide{
+      width:14rem;
+      height:20rem;
+    }
+
+    .disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .header-profileimg{
+      border-radius:50%;
+      width:15%;
+      height:15%;
+    }
+
+   
+
+ 
+
+    @media screen and (max-width: 500px) {
+      .card-wide{
+       
+       width:9rem;
+       height:15rem;
+      }
+        
+      .thumbimg{
+
+        width:4rem;
+        height:5rem;
+      }
+
+      .header-profileimg{
+
+        width:2rem;
+        height:2rem;
+      }
+  
+    
+
+
+
+      
+  }
+
+  .itemprice-inx{
+    color:darkcyan;
+  }
+
+  .category-lnk{
+    text-decoration: none;
+    color: rgb(62, 62, 62);
+  }
+
+  .category-lnk:hover {
+    color: rgb(132, 132, 132);
+  
+  }
+   
+
+    /*
+    @media (min-width: 30em) {
+      .card-columns {
+          -webkit-column-count: 2;
+          -moz-column-count: 2;
+          column-count: 2;
+      }
+  }
+  
+  @media (min-width: 48em) {
+      .card-columns {
+          -webkit-column-count: 3;
+          -moz-column-count: 3;
+          column-count: 3;
+      }
+  }
+  
+  @media (min-width: 62em) {
+      .card-columns {
+          -webkit-column-count: 4;
+          -moz-column-count: 4;
+          column-count: 4;
+      }
+  }
+  
+  @media (min-width: 75em) {
+      .card-columns {
+          -webkit-column-count: 5;
+          -moz-column-count: 5;
+          column-count: 5;
+      }
+  } */
+  </style>
+
+</head>
+
+<body>
+  <input type="hidden" id="profile-name" value={{request.session.Name}} />
+  <!-- navbar -->
+
+<nav class="one-edge-shadow sticky-top navbar navbar-expand-lg navbar-dark bg-primary px-4 py-0" ">
+
+    <!-- <a class="navbar-brand me-auto  ms-auto "   href="/"> Adven Mart<span> </span><img src="https://cdn-icons-png.flaticon.com/512/3643/3643914.png"
+      style="width:16%;height:15%;border-radius:50%;margin-right:0px;padding-right:0px;">
+   </a> -->
+
+      <a class="navbar-brand me-auto  ms-auto "   href="/homepage" style="width:40%;height:8%;margin-right:0px;padding-right:0px;"> <img src="{% static 'brand3.svg' %}" style="width:30%;height:5%;margin-right:0px;padding-right:0px;">
+   </a>
+
+    <!-- searchbox -->
+    <div class="search-wrapper" style="position:relative;width:400px;margin-left:20%;margin-right:2%;">
+      <div class="bg-primary search-input" style="position:relative;width:100%;">
+        <form  action="{% url 'index_search' %}  " id="submitform" method="GET">
+        <input type="text" placeholder="Search over 1000 items..  " aria-label="Search"
+          class="form-control form-control-sm mr-sm-2  inputbox" name="search" autocomplete="off"
+          style="width:100%;height:100%;">
+        <span class="icon mx-0 my-1"> <img src="{% static 'search_icon.png' %}"
+            style="width:10%;height:100%;position:absolute;right:0px;top:0px;border-radius:5px;"></span>
+        <!-- <a href="" target="_blank" hidden></a> -->
+         
+      </form>
+      </div>
+      <div class="autocom-box1"></div>
+    </div>
+
+    <a class="nav-link" style="color: #ffffff;" href="/cart">Cart
+      
+      <span class="badge bg-success" id="cart-head">0</span>
+      
+    </a>
+
+    <span class="badge bg-warning" ">Beta</span>
+
+
+
+    <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon "></span>
+    </button>
+
+
+    <!-- search box {% url 'index_search' %} -->
+
+
+
+
+
+
+    <div class="collapse navbar-collapse   justify-content-end" id="navbarSupportedContent">
+
+      <ul class=" navbar-nav my-2 my-lg-0 mx-4 ">
+        <li class="nav-item ">
+         
+        </li>
+        {% if request.session.customer %}
+
+        <li class="nav-item ">
+          <a class="nav-link" style="color: #ffffff;" href="/orders">Orders</a>
+        </li>
+         <!--<li class="nav-item ">-->
+        <!--  <a class="nav-link" style="color: #46ff09;visibility:hidden" href="/favourites">Wishlist</a>-->
+        <!--</li>-->
+        <li class="nav-item ">
+          <a class="nav-link header-profile mx-1 px-1" style="color: #ffffff; width:25%;" href="/usrprofile"><img class="header-profileimg " style="width:30px" src="{% static 'blank-profile.png' %} " ><span class="prof-span-txt" style="color:#AAFF00"> Profile</span></a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" style="color: #ffffff;" href="/logout">Logout</a>
+        </li>
+        {% else %}
+
+        <li class="nav-item ">
+          <a class="nav-link" href="/signup">Signup</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        {% endif %}
+
+
+
+      </ul>
+
+
+    </div>
+  </nav>
+  <ul class="d-flex flex-wrap border-0 col-lg-12 px-0  mt-3 mb-1 bg-warning justify-content-around">
+
+    {% for category in categories %}
+
+    {% if forloop.counter == 1 %}
+    <li class="list-group-item border-0 bg-warning "> <a class="category-lnk" href="/homepage" >All products</a></li>
+    {% endif %}
+    {% if forloop.counter < 9 %}
+    <li class="list-group-item border-0 bg-warning "> <a class="category-lnk"  href="/store?category={{category.id}}" >{{category.name}}</a></li>
+    {% endif %}
+    {% endfor %}  
+ 
+  </ul>
+
+  <ul class="d-flex flex-wrap border-0 col-lg-12 px-0 mx-0 my-1 bg-warning justify-content-around">
+
+    {% for category in categories %}
+    {% if forloop.counter > 8 and forloop.counter < 19 %}
+    <li class="list-group-item border-0 bg-warning"> <a class="category-lnk"  href="/store?category={{category.id}}" >{{category.name}}</a></li>
+    {% endif %}
+    {% endfor %}  
+ 
+  </ul>
+
+ 
+
+
+
+
+ 
+{% block content %}{% endblock %}
+
+{% block payment %}{% endblock %}
+
+{% block cat_first %}{% endblock %}
+
+{% block about %}{% endblock %}
+
+{% block upiscan %}{% endblock %}
+{% block store_profile %}{% endblock %}
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+
+
+</body>
+<script src="{% static 'js/search.js' %}"></script>
+<script src="{% static 'js/addtofav.js' %}"></script>
+<script src="{% static 'js/itemdetails.js' %}"></script> 
+
+<footer class="py-1 my-2">
+  <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+    <li class="nav-item"><a href="/homepage" class="nav-link px-2 text-muted">Home</a></li>
+
+    <li class="nav-item"><a href="{% url 'aboutus' %}" class="nav-link px-2 text-muted">About</a></li>
+
+    <!-- only admin access -->
+    {% if request.session.username == 'cpy3333' %}
+    <li class="nav-item"><a href="{% url 'admin_order_confrm' %}" class="nav-link px-2 text-warning">Orders</a></li>
+    {% endif %}
+
+  </ul>
+  <p class="text-center text-muted">© 2022 Adven Industries</p>
+</footer>
+
+</html>

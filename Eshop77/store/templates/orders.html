@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+<div class="container">
+    <input type="hidden" id="profile-name" value={{request.session.Name}} />
+   <div class="  rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Your Orders</p>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <!-- <th>Sno.</th> -->
+                    
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                     
+                    
+                </tr>
+            </thead>
+            <tbody>
+                 
+                {% for order in orders %}
+                <tr class="order-recs px-0 mx-0" id="orderid-{{forloop.counter}}" order-data="order-{{order.order_id}}" style="background-color:#00000010;color:rgba(9, 77, 248, 0.994);font-weight:bold"><td></td><td>ORDER {{order.order_id}}</td><td></td><td ></td><td></td><td></td><td></td><td></td></tr>
+                <tr>
+                     
+                    <!-- <td>{{forloop.counter}}</td> -->
+                    
+                    <td><img style="height: 80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></td>
+                    <td>{{order.product.name}}</td>
+                    <td>{{order.date}}</td>
+                    <td>{{order.price|currency}}</td>
+                    <td>{{order.quantity}}</td>
+                    <td>{{order.quantity|multiply:order.price|currency}}</td>
+
+                    {% if order.status %}
+                    <td><small class="text-light bg-success rounded px-2 py-1" >Completed</small></td>
+                    {% else %}
+                    <td><small class="text-light bg-warning rounded px-2 py-1 mx-2">Pending<span> </span></small></td>
+                    {% endif %}
+                     
+                     
+                </tr>
+
+                {% endfor %}
+               
+            </tbody>
+
+        </table>
+       
+   </div>
+</div>
+
+
+
+
+
+{% endblock %}

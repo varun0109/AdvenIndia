@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+<!-- body -->
+
+
+<ul id="slider">
+	<li class="slide"><a href="/?category=3"><img
+				src="https://www.grocistore.com/admin/uploads/banners/web_banners/banner1576516931.JPG"
+				style="width:99%;height:350px;" ></a></li>
+	<li class="slide"><a href="/?category=5"><img
+				src="https://rukminim1.flixcart.com/flap/1400/1400/image/15cbd99e6fcb6fc1.jpg?q=50"
+				style="width:99%;height:350px;" /></a></li>
+
+</ul>
+
+
+<!-- <carousel start> -->
+<!-- <carousel end> -->
+
+
+<div class="container-fluid mt-2 overflow-hidden">
+
+
+
+	<div class="row">
+
+
+		<!-- filter -->
+
+
+		<div class="col-lg-2 col-sm-2 mx-auto  ">
+			<div class="list-group ">
+
+				<a href="/" class="list-group-item list-group-item-action  ">All Products</a>
+
+				{% for category in categories %}
+				<a href="/?category={{category.id}}"
+					class="list-group-item list-group-item-action">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-10 mx-auto ">
+			<div class="row mx-auto">
+
+				{% for product in products %}
+				<div class="card mx-auto mb-3 card-columns" id={{product.id}} style="width: 14rem;">
+					<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap"
+						style="width:200px;height:200px;">
+
+
+<!-- 
+					{% if product.id in favourites %}
+					<img src="{% static 'undofav.svg' %}" class="remfromfav" id="rfav-{{product.id}}"
+						class="filter-green" style="width:15px;height:15px;position:absolute;top:10%;right:3%;">
+
+					{% else %}
+					<img src="{% static 'favorite.svg' %}" class="addtofav" id="fav-{{product.id}}" class="filter-green"
+						style="width:15px;height:15px;position:absolute;top:10%;right:3%;">
+					{% endif %}
+
+					<img src="{% static 'cart.svg' %}" class="addcarticon" id="carticn-{{product.id}}"
+						style="width:20px;height:20px;position:absolute;top:24%;right:3%;">
+
+					<span class="badge-card" style="color:rgb(255, 0, 0);position:absolute;top:20%;right:4%;">+</span> -->
+
+					<div class="card-body my-0">
+						<div class="card-title card-text my-0"><b>{{product.name}}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+								&nbsp; &nbsp;{{product.price|currency}}</b></div>
+						<!-- <div class="card-text"><b>{{product.price|currency}}</b></div> -->
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+					<div class="card-footer text-center bg-secondary my-0" id="item-footer-{{product.id}}">
+
+
+						{% with ind=product|cart_quantity:request.session.cart %}
+
+						<input type="hidden" id="prod-footer-{{product.id}}" class="prod-footer" value="{{ind}}" />
+
+						{% endwith %}
+
+						<button class="btn  btn-sm prod-add text-center bg-secondary text-white "
+							id="prod-{{product.id}}">Add to cart</button>
+
+					</div>
+
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+		<!-- <end all products> -->
+	</div>
+</div>
+
+
+
+{% endblock %}

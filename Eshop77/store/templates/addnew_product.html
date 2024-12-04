@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+     <style>
+
+
+     </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+
+      <script>
+        $(document).ready(function () {
+
+          $("#costprice,#sellprice,#admin-percent,#discount").keyup(function(){
+            var costprice=$('#costprice').val();
+            var sell_price=$('#sellprice').val();
+            var dscount=$('#discount').val();
+            var admin_percent=$('#admin-percent').val();
+
+            var cost_diff=((sell_price-costprice - (sell_price*dscount/100) )*(100-admin_percent)/100)*0.2;
+
+            $('#bvgained').val(cost_diff.toFixed(2));
+
+
+            $('#sp').val(sell_price-(sell_price*dscount/100));
+
+          });
+
+
+          $('#frmreset').click(function(){
+            $('#prdform')[0].reset();
+ });
+
+
+
+
+
+        });
+      </script>
+</head>
+<body>
+
+
+
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+    <div class="container-fluid">
+
+  <a class="navbar-brand me-auto  ms-auto py-0"   href="/homepage" style="width:35%;height:8%;margin-right:0px;padding-right:0px;"> <img class="py-0" src="{% static 'brand3.svg' %}" style="width:28%;height:8%;margin-right:0px;padding-right:0px;">
+  </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link active" aria-current="page" href="#">Admin</a>
+          <a class="nav-link active" style="color:#00FF00"  href="/load_product"><u>Load Products</u></a>
+          <a class="nav-link active" href="#"><u>Sold Products</u></a>
+          <a class="nav-link active" style="color:#00FF00" href="/admin_order_confrm"><u>Confirm Orders</u></a>
+          <a class="nav-link active" style="color:#00FF00" href="/usrpln_conf"><u>Update User Plan</u></a>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+      {% load cart %}
+{% load custom_filter %}
+
+
+<div class="container ">
+    <input type="hidden" id="profile-name" value={{request.session.Name}} />
+   <div class="  rounded p-4 m-4">
+
+
+
+
+          <div class="order-txt" style="text-align:center"><p class="display-4 pl-4 ml-4">Add Products</p></div>
+
+
+      <hr>
+   </div>
+ 
+
+   <form action="/load_product" method="POST" enctype="multipart/form-data" id="prdform" >
+    {% csrf_token %}
+        <div class="row my-2">
+          <div class="col-lg-3"></div>
+      <div class="col-lg-2 my-0"><button type="submit" class="btn btn-primary">Submit</button></div>
+      <div class="col-lg-2 my-0"> </div>
+       <div class="col-lg-2"><input type="reset" id="frmreset" value="Reset Form" class="btn btn-warning"></div>
+       <div class="col-lg-3"></div>
+   
+    </div>
+
+
+    <div class="row mb-3">
+
+      <label for="productname" class="col-sm-2 col-form-label">Product Name</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="productname" name="productname" required="">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="sellprice" class="col-sm-2 col-form-label">MRP &#8377</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="sellprice" value="0" name="selllingpricemrp" required="">
+      </div>
+    </div>
+           <div class="row mb-3">
+      <label for="admin-percent" class="col-sm-2 col-form-label">AdminPercent(default 9%)</label>
+      <div class="col-sm-5">
+        <input type="number" class="form-control" id="admin-percent" name="admin_per" value="9" required="">
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="discount" class="col-sm-2 col-form-label">discount %</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="discount" name="disc_pc" value="0">
+      </div>
+    </div>
+
+        <div class="row mb-3">
+      <label for="sp" class="col-sm-2 col-form-label">Sell Price &#8377</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="sp" name="sprice" value="" readonly>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <label for="costprice" class="col-sm-2 col-form-label">Cost Price &#8377</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="costprice" name="cost2me" value="0" required="">
+      </div>
+    </div>
+
+
+
+
+    <div class="row mb-3">
+      <label for="bvgained" class="col-sm-2 col-form-label">BV_gained</label>
+      <div class="col-sm-5">
+        <input type="text" class="form-control" id="bvgained" name="BV" required="">
+      </div>
+    </div>
+
+
+    <div class="row mb-3">
+        <label for="category" class="col-sm-2 col-form-label">Category</label>
+        <div class="col-sm-5">
+        <select class="form-select" id="category" name="categry">
+          {% for cat in all_category %}
+          <option>{{cat}}</option>
+          {% endfor %}
+
+        </select>
+      </div>
+
+      </div>
+
+
+
+
+      <div class="row mb-3">
+        <label for="description" class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="description" name="descript" required="">
+        </div>
+      </div>
+
+
+
+
+      <div class="row mb-3">
+        <label for="quantity" class="col-sm-2 col-form-label">Quantity</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="quantity" name="volume" required="">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <label for="brand" class="col-sm-2 col-form-label">Brand</label>
+        <div class="col-sm-5">
+          <input type="text" class="form-control" id="brand" name="brands" required="">
+        </div>
+      </div>
+
+
+      <div class="row mb-3">
+        <label for="man_date" class="col-sm-2 col-form-label">manufactur_date</label>
+        <div class="col-sm-5">
+          <input type="date"        value="2023-05-22"
+          min="2018-01-01" max="2025-12-31" class="form-control" id="man_date" name="man_dt" required="">
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label for="exp_date" class="col-sm-2 col-form-label">expiry_date</label>
+        <div class="col-sm-5">
+          <input  type="date"        value="2025-05-22"
+          min="2018-01-01" max="2025-12-31"  class="form-control" id="exp_date" name="ex_dt" required="">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-2"></div>
+      <div class="mb-3 col-lg-5">
+        <label for="image1" class="form-label" >Image1</label>
+        <input class="form-control" type="file" id="image1" accept="image/png, image/gif, image/jpeg" name="img1">
+      </div>
+
+
+      <div class="mb-3 col-lg-5">
+        <label for="image2" class="form-label" >Image2</label>
+        <input class="form-control" type="file" id="image2" accept="image/png, image/gif, image/jpeg" name="img2">
+      </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-2"></div>
+      <div class="mb-3 col-lg-5">
+        <label for="image3" class="form-label" >Image3</label>
+        <input class="form-control" type="file" id="image3" accept="image/png, image/gif, image/jpeg" name="img3">
+      </div>
+      <div class="mb-3 col-lg-5">
+        <label for="image4" class="form-label" >Image4</label>
+        <input class="form-control" type="file" id="image4" accept="image/png, image/gif, image/jpeg" name="img4">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-lg-2"></div>
+      <div class="mb-3 col-lg-5">
+        <label for="image5" class="form-label" >Image5</label>
+        <input class="form-control" type="file" id="image5" accept="image/png, image/gif, image/jpeg" name="img5">
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </form>
+</div>
+
+
+
+
+</body>
+</html>

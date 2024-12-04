@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <title>Welcome to Eshop!!</title>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+  
+  <script>
+
+    $(document).ready(function () {
+      qcart();
+     
+      function qcart(){
+      $.ajax(
+          {
+            url: 'cart_quan',
+            type: 'get',
+            success: function (response) {
+              console.log($("#cart-head").html(response));
+              
+
+            }
+          }
+        ); }
+
+
+     // change the cart text to remove or add to cart based on cart value
+      queu = $(".card-footer");
+      queu.each(function (idx, li) {
+        let product = $(li);
+        let qvalue = $(product.children("input.prod-footer"));
+
+        qvalue.each(function (idx2, li2) {
+          let prod3 = $(li2);
+
+          if ($(prod3).attr("value") > 0) {
+            let prod4 = $(prod3).next("button.prod-add");
+            
+            $(prod4).text('Remove');
+            $(prod4).attr("class","btn  btn-sm prod-add text-center bg-success text-white ");
+
+             
+
+          }
+
+        });
+      });
+
+
+      
+
+     // offer slider
+      $('#slider>li:gt(0)').hide;
+      setInterval(function () {
+        $('#slider > li:first')
+          .fadeOut(1000)
+          .next()
+          .fadeIn(1000)
+          .end()
+          .appendTo('#slider');
+      }, 2000);
+
+
+      $(".prod-add").click(function () {   //cart Add to cart
+        var prodid = parseInt($(this).attr('id').split('-')[1]);
+        var value = parseInt(prodid); //productId
+        if ($('#prod-' + prodid).html().trim() == 'Remove') {
+          counter = 0;
+        }
+        else {
+          counter = 1;
+        }
+
+
+        $.ajax(
+          {
+            url: '/#' + prodid,
+            type: 'post',
+            data: {
+              product: value,
+              quantity: counter,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              console.log($('#prod-' + prodid).html().trim());
+              if ($('#prod-' + prodid).html().trim() == "Add to cart") {
+                $('#prod-' + prodid).html(`Remove`);
+                $('#prod-' + prodid).attr("class","btn  btn-sm prod-add text-center bg-success text-white ");
+                qcart();
+              }
+              else {
+                $('#prod-' + prodid).html("Add to cart");
+                $('#prod-' + prodid).attr("class","btn  btn-sm prod-add text-center bg-secondary text-white ");
+                qcart();
+              }
+            }
+          }
+        );
+      }
+      ); //
+
+      $(".del-item").click(remove_item);
+
+      function remove_item() {       // cart empty 
+
+        var prodid = parseInt($(this).attr('id').split('-')[1]);
+        var value = parseInt(prodid); //productId
+
+
+        $.ajax(
+          {
+            url: '/#' + prodid,
+            type: 'post',
+            data: {
+              product: value,
+              quantity: parseInt(0),
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              console.log(response);
+
+
+              $('#item-' + value).remove();
+              location.reload();
+
+
+            }
+
+          }
+        );
+      }
+
+      $(".cart-rem").click(function () {     //cart -
+        var rem_counter = 0;
+        var productid = $(this).attr("id").split('-')[1];
+        rem_counter = parseInt($('#quan-' + productid).text())
+
+
+        if (rem_counter > 0) {
+
+          rem_counter--;
+        }
+        else {
+          $('#prod-' + productid).text(`Add to cart`);
+        }
+
+        $.ajax(
+          {
+            url: '/#' + productid,
+            type: 'post',
+            data: {
+              product: productid,
+              quantity: rem_counter,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              //console.log('/#' + productid, response);
+              $('#quan-' + productid).text(rem_counter);
+              location.reload();
+
+            }
+
+          }
+        );
+      }
+
+      );
+
+
+      $(".cart-add").click(function () {  //cart +
+        var add_counter = 0;
+
+        var productid = $(this).attr("id").split('-')[1];
+        add_counter = $('#quan-' + productid).text();
+        add_counter++;
+
+        $.ajax(
+          {
+            url: '/#' + productid,
+            type: 'post',
+            data: {
+              product: productid,
+              quantity: add_counter,
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (response) {
+              //console.log('/#' + productid, response);
+              $('#quan-' + productid).text(add_counter);
+              location.reload();
+
+            }
+
+          }
+        );
+
+      });
+
+    });
+
+
+  </script>
+
+
+
+
+  <style>
+    nav {
+      background-color: rgba(15, 7, 253, 0);
+    }
+
+    .one-edge-shadow {
+      box-shadow: 0 8px 2px -5px rgb(195, 192, 192);
+    }
+
+    .display-8 {
+      font-weight: 200;
+      font-size: 30px;
+    }
+
+    #slider {
+
+      width: 99%;
+      height: 350px;
+
+
+      position: relative;
+    }
+
+    .slide {
+      list-style: none;
+    }
+
+    #slider>li {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+    }
+
+    #empty-cart-icon {
+
+      width: 25px;
+      height: 20px;
+
+    }
+
+    .overlay {
+      position: absolute;
+      top: 40%;
+      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.5);
+      /* Black see-through */
+      color: #f1f1f1;
+      width: 80%;
+      transition: .5s ease;
+      opacity: 0;
+      color: white;
+      font-size: 100%;
+      padding: 2%;
+      text-align: center;
+      margin-left: 2%;
+    }
+
+    .cat-card:hover .overlay {
+      opacity: 1;
+
+    }
+
+    .cat-card:hover {
+      transform: scale(1.2);
+    }
+
+    .flash-card:hover {
+      transform: scale(1.2);
+    }
+
+    hr {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.442);
+    }
+
+    
+/*
+    @media (min-width: 30em) {
+      .card-columns {
+          -webkit-column-count: 2;
+          -moz-column-count: 2;
+          column-count: 2;
+      }
+  }
+  
+  @media (min-width: 48em) {
+      .card-columns {
+          -webkit-column-count: 3;
+          -moz-column-count: 3;
+          column-count: 3;
+      }
+  }
+  
+  @media (min-width: 62em) {
+      .card-columns {
+          -webkit-column-count: 4;
+          -moz-column-count: 4;
+          column-count: 4;
+      }
+  }
+  
+  @media (min-width: 75em) {
+      .card-columns {
+          -webkit-column-count: 5;
+          -moz-column-count: 5;
+          column-count: 5;
+      }
+  } */
+  </style>
+
+</head>
+
+<body>
+
+  <!-- navbar -->
+
+  <nav class="one-edge-shadow 
+  sticky-top navbar 
+  navbar-expand-lg
+  navbar-dark bg-primary " >
+
+    <a class="navbar-brand me-auto  ms-auto " href="/">E-Shop</a>
+    <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon "></span>
+    </button>
+
+     <form class="form-inline my-1 my-lg-0 mx-5"  action="{% url 'index_search' %}  "> 
+      <input type="search" class="form-control form-control-sm mr-sm-2  " aria-label="Search" name="search"  placeholder="Search over 1000 items.." />
+      <button type="submit" class="btn btn-sm btn-success my-2 my-sm-0 ">Submit</button>
+    </form>
+
+   
+   
+   
+    <div class="collapse navbar-collapse   justify-content-end" id="navbarSupportedContent">
+      
+      <ul class=" navbar-nav my-2 my-lg-0 mx-5 ">
+        <li class="nav-item ">
+          <a class="nav-link" style="color: #ffffff;" href="/cart">Cart
+            <!-- <span class="badge badge-info">{{request.session.cart.keys|length}}</span> -->
+            <span class="badge badge-info" id="cart-head">0</span>
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        {% if request.session.customer %}
+
+        <li class="nav-item ">
+          <a class="nav-link" style="color: #ffffff;" href="/orders">Orders<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" style="color: #ffffff;" href="/logout">Logout<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+
+        <li class="nav-item ">
+          <a class="nav-link" href="/signup">Signup<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="/login">Login<span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+
+
+
+      </ul>
+      
+   
+    </div>
+  </nav>
+
+
+  {% block content %}{% endblock %}
+
+  {% block payment %}{% endblock %}
+
+  {% block cat_first %}{% endblock %}
+
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+
+
+</body>
+<footer class="py-1 my-2">
+  <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+  </ul>
+  <p class="text-center text-muted">© 2022 Company, Inc</p>
+</footer>
+</html>
