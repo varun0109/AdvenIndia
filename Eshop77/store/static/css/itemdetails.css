@@ -1,0 +1,188 @@
+ 
+    .checked {
+      color: rgba(255, 218, 11, 0.924);
+    }
+
+    .uncheck {
+      color: rgba(223, 194, 31, 0.223);
+    }
+    .rating{
+      cursor: pointer;
+    }
+    
+
+    .item-size {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+    }
+
+    .itemsize {
+      border-radius: 10px;
+    }
+
+    .thumbimg {
+
+      cursor: pointer;
+    }
+
+    .itemsize {
+
+      cursor: pointer;
+    }
+
+    .itemdiscount {
+      color: rgba(21, 139, 0, 0.766);
+    }
+
+    .itemprice {
+      font-weight: bold;
+      font-size: larger;
+    }
+
+    .itemactualprice {
+
+      color: rgba(0, 0, 0, 0.539);
+      font-size: small
+    }
+
+    .itemtaxtext {
+      color: rgba(0, 0, 0, 0.539);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: small;
+    }
+
+    .checkavailabilityrow {
+      display: inline-block;
+    }
+
+    .checkavailtext {
+      overflow: hidden;
+      width: 70%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgba(0, 0, 0, 0.725)
+    }
+
+    .checkavailbutn {
+
+      position: relative;
+      left: 70%;
+      top: 0%;
+      width: 50px;
+      height: 25px;
+
+    }
+
+    .availibilitytext {
+      color: #0b4293;
+      font-size: small;
+      font-family: Arial, Helvetica, sans-serif;
+      position: relative;
+      bottom: 8%;
+      left: 2%;
+      width: 100px;
+
+
+    }
+
+    /* .addcitytext {
+      color: #0d6efd;
+      font-size: medium;
+      font-family: Arial, Helvetica, sans-serif;
+    } */
+
+    .proddesc {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .offertxt {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .returnpol {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+      color: rgba(0, 0, 0, 0.539);
+      font-weight: bold;
+    }
+
+    .offertxticon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+    .returnpolicon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+    .proddescicon {
+      font-weight: bold;
+      cursor: pointer;
+      background-color: rgba(0, 0, 0, 0.539);
+      color: white;
+      border-radius: 30%;
+      width: 10px;
+      height: 10px;
+
+    }
+
+
+    .offertxtdetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+    }
+
+
+    .returnpoldetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+
+    }
+
+    .proddescdetails {
+      display: none;
+      background-color: #ffffff;
+      border-radius: 10px;
+      font-size: small;
+      overflow-x: hidden;
+      overflow-y: auto;
+      text-align: justify;
+
+    }
+
+    ul {
+      list-style-type: decimal;
+    }
+
+    .itemsize-text{
+      cursor: pointer;
+
+    }
+ 
